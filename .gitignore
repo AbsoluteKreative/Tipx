@@ -1,0 +1,38 @@
+# env
+.env
+.env.*
+!.env.example
+
+# deps
+node_modules/
+
+# build
+.next/
+out/
+dist/
+
+# foundry
+cache/
+broadcast/
+
+# db
+*.db
+*.db-journal
+
+# os
+.DS_Store
+Thumbs.db
+
+# wallets / keys — never commit
+wallets/
+*.json.bak
+
+# sqlite WAL files
+*.db-shm
+*.db-wal
+
+# foundry build output
+contracts/out/
+
+# backup files
+*.bak

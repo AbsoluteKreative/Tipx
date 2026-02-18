@@ -1,0 +1,33 @@
+app = 'tipx'
+primary_region = 'ams'
+
+[build]
+
+[env]
+  NODE_ENV = 'production'
+  NEXT_PUBLIC_API_URL = ''
+  NEXT_PUBLIC_ARB_RPC_URL = ''
+  NEXT_PUBLIC_VAULT_ADDRESS = ''
+  NEXT_PUBLIC_USDC_ADDRESS = '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d'
+  NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID = '36f3be3424a63a39e5f80589bb0155e1'
+  NEXT_PUBLIC_PROTOCOL_FEE_PERCENTAGE = '0.05'
+  ARB_RPC_URL = ''
+  USDC_ADDRESS = '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d'
+  DB_PATH = '/data'
+  LOYALTY_PAYOUT_RATE = '0.005'
+
+[[mounts]]
+  source = 'tipx_data'
+  destination = '/data'
+
+[http_service]
+  internal_port = 7300
+  force_https = true
+  auto_stop_machines = 'off'
+  auto_start_machines = false
+  min_machines_running = 1
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1

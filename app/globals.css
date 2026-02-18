@@ -1,0 +1,334 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --foreground: #e4e4e7;
+  --background: #09090b;
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-hover: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --coral: #ff6b6b;
+  --emerald: #51cf66;
+  --purple: #cc5de8;
+  --blue: #339af0;
+  --amber: #ffa94d;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* subtle mesh gradient on body */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(255, 107, 107, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(51, 154, 240, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 0%, rgba(204, 93, 232, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* noise texture overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+#__next, main, body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* glass card utility */
+@layer components {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    transition: all 0.2s ease;
+  }
+
+  .glass-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .glass-card-static {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+  }
+
+  /* gradient text utility */
+  .gradient-text {
+    background: linear-gradient(135deg, #ff6b6b, #cc5de8, #339af0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-warm {
+    background: linear-gradient(135deg, #ff6b6b, #ffa94d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* avatar ring */
+  .avatar-ring {
+    padding: 2px;
+    background: linear-gradient(135deg, #ff6b6b, #cc5de8, #339af0);
+    border-radius: 9999px;
+  }
+
+  .avatar-ring-inner {
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  /* shimmer loading skeleton */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 25%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.03) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+
+  /* input styling */
+  .input-base {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 10px 14px;
+    color: var(--foreground);
+    font-size: 14px;
+    transition: all 0.2s ease;
+    outline: none;
+  }
+
+  .input-base::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+  }
+
+  .input-base:focus {
+    border-color: rgba(255, 107, 107, 0.4);
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  /* button styles */
+  .btn-primary {
+    background: linear-gradient(135deg, #ff6b6b, #ff8787);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #ff8787, #ffa8a8);
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:disabled {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.25);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn-emerald {
+    background: linear-gradient(135deg, #40c057, #51cf66);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-emerald:hover {
+    background: linear-gradient(135deg, #51cf66, #69db7c);
+    box-shadow: 0 4px 20px rgba(81, 207, 102, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .btn-emerald:disabled {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.25);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn-purple {
+    background: linear-gradient(135deg, #cc5de8, #da77f2);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-purple:hover {
+    background: linear-gradient(135deg, #da77f2, #e599f7);
+    box-shadow: 0 4px 20px rgba(204, 93, 232, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .btn-purple:disabled {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.25);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn-blue {
+    background: linear-gradient(135deg, #339af0, #4dabf7);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-blue:hover {
+    background: linear-gradient(135deg, #4dabf7, #74c0fc);
+    box-shadow: 0 4px 20px rgba(51, 154, 240, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .btn-blue:disabled {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.25);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* preset amount chip */
+  .amount-chip {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .amount-chip:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .amount-chip.active {
+    background: rgba(255, 107, 107, 0.15);
+    border-color: rgba(255, 107, 107, 0.4);
+    color: #ff8787;
+  }
+
+  /* stat card glow */
+  .stat-glow {
+    position: relative;
+  }
+
+  .stat-glow::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 16px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(204, 93, 232, 0.2), rgba(51, 154, 240, 0.2));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .stat-glow:hover::before {
+    opacity: 1;
+  }
+}
+
+/* scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* select dropdown styling */
+select.input-base {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+select.input-base option {
+  background: #18181b;
+  color: #e4e4e7;
+}
+
+/* override rainbowkit connect button */
+[data-rk] button {
+  font-family: 'Inter', system-ui, sans-serif !important;
+}
