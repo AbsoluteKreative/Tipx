@@ -8,8 +8,8 @@ import { VAULT_ABI, ERC20_ABI } from '@/lib/abi'
 import { VAULT_ADDRESS, USDC_ADDRESS, API_URL, arbitrumSepolia, arcTestnet } from '@/lib/config'
 
 const SOURCE_CHAINS = [
-  { bridgeId: 'Base_Sepolia', name: 'Base Sepolia', chainId: baseSepolia.id },
   { bridgeId: 'Arc_Testnet', name: 'Arc Testnet', chainId: arcTestnet.id },
+  { bridgeId: 'Base_Sepolia', name: 'Base Sepolia', chainId: baseSepolia.id },
 ]
 
 type Step = 'idle' | 'switching_source' | 'bridging' | 'waiting_attestation' | 'switching_arb' | 'approving' | 'contributing' | 'recording' | 'done' | 'error'
