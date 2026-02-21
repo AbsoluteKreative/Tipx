@@ -18,6 +18,7 @@ export function ContributeForm({ creatorAddress, creatorName, onSuccess }: Contr
   const { address, isConnected } = useAccount()
   const [amount, setAmount] = useState('')
   const [step, setStep] = useState<'idle' | 'approving' | 'contributing' | 'recording' | 'done' | 'error'>('idle')
+  const [error, setError] = useState('')
   const [payout, setPayout] = useState<any>(null)
   const [txHash, setTxHash] = useState<string>('')
 
@@ -27,6 +28,7 @@ export function ContributeForm({ creatorAddress, creatorName, onSuccess }: Contr
   const handleContribute = async () => {
     if (!address || !amount || parseFloat(amount) <= 0 || !publicClient) return
 
+    setError('')
     try {
       const amountUnits = parseUnits(amount, 6)
 
@@ -86,6 +88,7 @@ export function ContributeForm({ creatorAddress, creatorName, onSuccess }: Contr
       onSuccess?.()
     } catch (err: any) {
       console.error('contribution failed:', err)
+      setError(err?.shortMessage || err?.message || 'unknown error')
       setStep('error')
     }
   }
@@ -181,11 +184,14 @@ export function ContributeForm({ creatorAddress, creatorName, onSuccess }: Contr
 
       {/* error */}
       {step === 'error' && (
-        <div className="flex items-center gap-2 text-sm text-aurora-coral bg-aurora-coral/10 rounded-xl px-4 py-3">
-          <span>tip failed.</span>
-          <button onClick={() => setStep('idle')} className="underline ml-auto hover:text-white transition-colors">
-            retry
-          </button>
+        <div className="text-sm text-aurora-coral bg-aurora-coral/10 rounded-xl px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span>tip failed</span>
+            <button onClick={() => setStep('idle')} className="underline ml-auto hover:text-white transition-colors">
+              retry
+            </button>
+          </div>
+          {error && <div className="text-xs text-aurora-coral/70 mt-1 break-all">{error}</div>}
         </div>
       )}
 

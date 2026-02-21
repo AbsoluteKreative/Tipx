@@ -137,7 +137,7 @@ export function BridgeTip({ creatorAddress, creatorName, onSuccess }: BridgeTipP
       onSuccess?.()
     } catch (err: any) {
       console.error('bridge & contribute failed:', err)
-      setError(err.message || 'bridge failed')
+      setError(err?.shortMessage || err?.message || 'bridge failed')
       setStep('error')
     }
   }
@@ -199,11 +199,14 @@ export function BridgeTip({ creatorAddress, creatorName, onSuccess }: BridgeTipP
       )}
 
       {step === 'error' && (
-        <div className="flex items-center gap-2 text-sm text-aurora-coral bg-aurora-coral/10 rounded-xl px-4 py-3">
-          <span>{error || 'bridge failed'}</span>
-          <button onClick={() => setStep('idle')} className="underline ml-auto hover:text-white transition-colors">
-            retry
-          </button>
+        <div className="text-sm text-aurora-coral bg-aurora-coral/10 rounded-xl px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span>bridge failed</span>
+            <button onClick={() => setStep('idle')} className="underline ml-auto hover:text-white transition-colors">
+              retry
+            </button>
+          </div>
+          {error && <div className="text-xs text-aurora-coral/70 mt-1 break-all">{error}</div>}
         </div>
       )}
     </div>
