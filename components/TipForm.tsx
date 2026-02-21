@@ -49,17 +49,18 @@ export function TipForm({ creatorAddress, creatorName, onSuccess }: TipFormProps
   const [error, setError] = useState('')
   const [payout, setPayout] = useState<any>(null)
   const [txHash, setTxHash] = useState('')
+  const [tippedRoute, setTippedRoute] = useState<RouteId | null>(null)
 
-  // auto-select route based on wallet chain
+  // auto-select route based on wallet chain — but not during an active tip
+  const isActive = step !== 'idle' && step !== 'done' && step !== 'error'
   useEffect(() => {
-    if (!chainId) return
+    if (!chainId || isActive) return
     const match = ROUTES.find(r => r.chainId === chainId)
     if (match) setRoute(match.id)
-  }, [chainId])
+  }, [chainId, isActive])
 
   const activeRoute = ROUTES.find(r => r.id === route)!
   const isDirect = !activeRoute.bridgeId
-  const isActive = step !== 'idle' && step !== 'done' && step !== 'error'
 
   const handleTip = async () => {
     if (!address || !walletClient || !amount || parseFloat(amount) <= 0 || !arbPublicClient) return
@@ -67,6 +68,7 @@ export function TipForm({ creatorAddress, creatorName, onSuccess }: TipFormProps
     setError('')
     setPayout(null)
     setTxHash('')
+    setTippedRoute(route)
 
     try {
       // bridge flow: switch to source, bridge, then switch to arb
@@ -311,7 +313,7 @@ export function TipForm({ creatorAddress, creatorName, onSuccess }: TipFormProps
           </svg>
           <span>
             tipped {creatorName || 'creator'}
-            {!isDirect && ` via ${activeRoute.label}`}
+            {tippedRoute && tippedRoute !== 'arbitrum' && ` via ${ROUTES.find(r => r.id === tippedRoute)?.label}`}
           </span>
           {txHash && (
             <a
