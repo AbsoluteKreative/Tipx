@@ -32,6 +32,10 @@ export function ContributionFeed({ creatorAddress, refreshKey }: ContributionFee
     }
 
     const fetchEvents = async () => {
+      // small delay on refresh to let RPC index the new tx
+      if (refreshKey && refreshKey > 0) {
+        await new Promise(r => setTimeout(r, 2000))
+      }
       try {
         const currentBlock = await publicClient.getBlockNumber()
         const fromBlock = currentBlock > BigInt(9000) ? currentBlock - BigInt(9000) : BigInt(0)
