@@ -4,8 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { CREATORS } from '@/lib/creators'
 import { getENSProfile, type ENSProfile } from '@/lib/ens'
-import { ContributeForm } from '@/components/ContributeForm'
-import { BridgeTip } from '@/components/BridgeTip'
+import { TipForm } from '@/components/TipForm'
 import { ContributionFeed } from '@/components/ContributionFeed'
 import { API_URL } from '@/lib/config'
 
@@ -21,7 +20,6 @@ export default function CreatorPage() {
   const [stats, setStats] = useState<any>(null)
   const [recentContributions, setRecentContributions] = useState<any[]>([])
   const [refreshKey, setRefreshKey] = useState(0)
-  const [activeTab, setActiveTab] = useState<'direct' | 'bridge'>('direct')
 
   const handleContributionSuccess = useCallback(() => {
     setRefreshKey((k) => k + 1)
@@ -173,60 +171,18 @@ export default function CreatorPage() {
         </div>
       </div>
 
-      {/* tip section — tabbed */}
+      {/* tip section */}
       <div className="glass-card-static overflow-hidden mb-6">
-        {/* tab headers */}
-        <div className="flex border-b border-white/[0.06]">
-          <button
-            onClick={() => setActiveTab('direct')}
-            className={`flex-1 py-3.5 text-sm font-medium transition-colors relative ${
-              activeTab === 'direct'
-                ? 'text-aurora-emerald'
-                : 'text-zinc-500 hover:text-zinc-300'
-            }`}
-          >
-            tip direct
-            {activeTab === 'direct' && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-aurora-emerald" />
-            )}
-          </button>
-          <button
-            onClick={() => setActiveTab('bridge')}
-            className={`flex-1 py-3.5 text-sm font-medium transition-colors relative ${
-              activeTab === 'bridge'
-                ? 'text-aurora-purple'
-                : 'text-zinc-500 hover:text-zinc-300'
-            }`}
-          >
-            cross-chain
-            {activeTab === 'bridge' && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-aurora-purple" />
-            )}
-          </button>
-        </div>
-
-        {/* tab content */}
         <div className="p-6">
-          {activeTab === 'direct' && (
-            creatorAddress ? (
-              <ContributeForm
-                creatorAddress={creatorAddress}
-                creatorName={displayName || undefined}
-                onSuccess={handleContributionSuccess}
-              />
-            ) : (
-              <div className="text-zinc-500 text-sm">resolving ENS name...</div>
-            )
-          )}
-
-          {activeTab === 'bridge' && creatorAddress && (
-            <BridgeTip
+          {creatorAddress ? (
+            <TipForm
               creatorAddress={creatorAddress}
               creatorName={displayName || undefined}
               onSuccess={handleContributionSuccess}
             />
+          ) : (
+            <div className="text-zinc-500 text-sm">resolving ENS name...</div>
           )}
-
         </div>
       </div>
 
