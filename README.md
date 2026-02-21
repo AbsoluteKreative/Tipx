@@ -25,49 +25,63 @@ and built-in loyalty payouts to drive repeat support.
 ## how it works
 
 ```
-                          ┌──────────────────────────────────┐
-                          │           frontend                │
-                          │     next.js + tailwind + wagmi    │
-                          │                                    │
-                          │  ┌──────────────────────────────┐ │
-                          │  │     EVM wallet (rainbowkit)   │ │
-                          │  └──────────────┬───────────────┘ │
-                          └─────────────────┼─────────────────┘
-                                            │
-                        ┌───────────────────┼────────┐
-                        │                   │        │
-                        ▼                   ▼        │
-          ┌──────────────────┐  ┌────────────────┐   │
-          │ Arbitrum direct  │  │   BridgeKit    │   │
-          │                  │  │   (CCTP v2)    │   │
-          │ approve USDC     │  │                │   │
-          │ -> contribute()  │  │ burn on source │   │
-          │ on Vault         │  │ -> attest      │   │
-          │ 95/5 split       │  │ -> mint on Arb │   │
-          │ on-chain         │  │ -> contribute()│   │
-          └────────┬─────────┘  └───────┬────────┘   │
-                   │                    │             │
-                   └────────────────────┴─────────────┘
-                                        │
-                                        ▼
-                            ┌─────────────────────────┐
-                            │ POST /api/contributions  │
-                            │   express backend        │
-                            │   (chain-agnostic)       │
-                            │                          │
-                            │ - record in sqlite       │
-                            │ - count per pair         │
-                            │ - every 3rd contribution:│
-                            │   0.5% cashback +        │
-                            │   0.5% creator bonus     │
-                            │   via distributeLoyalty() │
-                            └─────────────────────────┘
+discover ────────→ connect ───────────→ tip ──────────────→ earn
+    │                 │                  │                   │
+    ▼                 ▼                  ▼                   ▼
+ ENS names        EVM wallet        direct on Arb       every 3rd tip:
+ *.tipx.eth       via RainbowKit    or bridge from      0.5% cashback
+ on-chain         any chain         any CCTP chain      0.5% creator bonus
+ profiles                           (Arc, Base, ...)    on-chain, automatic
 ```
 
-the backend doesn't know or care which chain was used. every payment path
-produces the same result: a contribution event with `(patron, creator, amount, chain, txHash)`.
-adding a new chain = one new frontend component. zero changes to payout logic,
-DB schema, or API.
+### architecture (simplified)
+
+```
+  patron's USDC                              ENS identity
+  ┌──────────────────┐                      ┌──────────────────┐
+  │ Arbitrum Sepolia │──→ direct (native)   │ *.tipx.eth       │
+  │ Arc Testnet      │─┐                    │ forward/reverse  │
+  │ any CCTP chain   │─┤ BridgeKit          │ resolution +     │
+  │ eg. Base Sepolia │─┘ burn→attest→mint   │ text records     │
+  └──────────────────┘                      └────────┬─────────┘
+                  │                                  │
+                  ▼                                  ▼
+  ┌───────────────────────────────────────────────────────┐
+  │                frontend (next.js + wagmi)             │
+  │                                                       │
+  │  wallet connection (rainbowkit) → unified tip form    │
+  │  route selector: Arbitrum direct / cross-chain bridge │
+  └────────────────────────┬──────────────────────────────┘
+                           │
+                           ▼
+  ┌────────────────────────────────────────────────────────────┐
+  │          ContributionVault (Arbitrum Sepolia)              │
+  │                                                            │
+  │  contribute(creator, amount)                               │
+  │    -> 95% to creator  /  5% to protocol pool               │
+  │    -> emits ContributionReceived                           │
+  │                                                            │
+  │  distributeLoyalty(patron, creator, cashback, bonus)       │
+  │    -> atomic payout to both patron and creator        <--+ │
+  └───────────────────────────┬──────────────────────────────│─┘
+                              │                              │
+                              v                              │
+  ┌───────────────────────────────────────────────────────── │ ┐
+  │           express backend (chain-agnostic)               │ │
+  │                                                          │ │
+  │  POST /api/contributions -> record + count pairs         │ │
+  │  every 3rd tip from same patron->creator: ───────────────+ │
+  │    trigger on-chain loyalty payout (loyalty loop)          │
+  │                                                            │
+  │  GET /api/patrons/:wallet -> dashboard data                │
+  │  GET /api/creators/:wallet -> creator stats                │
+  └────────────────────────────────────────────────────────────┘
+```
+
+the backend is chain-agnostic — every payment path produces the same normalised
+event: `(patron, creator, amount, chain, txHash)`. it tracks contribution pairs,
+detects loyalty thresholds, and triggers on-chain payouts via the vault.
+adding a new source chain requires zero backend changes.
 
 ## payment rails
 
@@ -157,10 +171,10 @@ deployed at: [`0xC74D73971abE0B7EBc0Ef904aE8A5B925e87491B`](https://sepolia.arbi
 ## design decisions
 
 - **USDC-only** — people think in dollars. stable for creators, stable for platform revenue. no volatility exposure.
-- **chain-agnostic backend** — the DB schema doesn't know about chains. a contribution is a contribution. makes adding new chains trivial.
+- **chain-agnostic backend** — normalises contributions from any chain into a unified schema. tracks patron→creator relationships, detects loyalty thresholds, triggers on-chain payouts. adding a new source chain = zero backend changes.
 - **ENS as identity layer** — creators are people, not hex addresses. text records double as a decentralised profile system.
 - **BridgeKit for cross-chain** — CCTP v2 burns-and-mints real USDC (not wrapped). native bridging, no liquidity pools.
-- **Arbitrum as settlement chain** — fast finality, low fees, well-supported by wallets and tooling. all contributions settle here.
+- **Arbitrum as settlement chain** — sub-second block times, sub-cent tx fees, native CCTP support for cross-chain USDC, and universal wallet compatibility (every major wallet supports Arbitrum out of the box). all contributions settle here regardless of origin chain, giving creators a single reliable payout destination.
 
 ## project structure
 
