@@ -38,7 +38,8 @@ export function ContributionFeed({ creatorAddress, refreshKey }: ContributionFee
       }
       try {
         const currentBlock = await publicClient.getBlockNumber()
-        const fromBlock = currentBlock > BigInt(9000) ? currentBlock - BigInt(9000) : BigInt(0)
+        // arb sepolia: ~0.25s blocks, 500k blocks ≈ ~1.5 days
+        const fromBlock = currentBlock > BigInt(500000) ? currentBlock - BigInt(500000) : BigInt(0)
 
         const logs = await publicClient.getLogs({
           address: VAULT_ADDRESS,
