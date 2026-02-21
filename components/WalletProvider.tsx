@@ -18,6 +18,7 @@ function getWagmiConfig() {
       appName: 'TipX',
       projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'placeholder',
       chains: [arbitrumSepolia, baseSepolia, sepolia, arcTestnet],
+      ssr: true,
     })
   }
   return _wagmiConfig
