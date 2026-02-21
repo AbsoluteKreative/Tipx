@@ -27,13 +27,6 @@ export const CREATORS: Creator[] = [
     wallet: '0xB7451C3890ED0bbEc9a2c63028adF558bAC8a442',
     description: 'music producer & sound designer',
   },
-  {
-    id: 'parry',
-    ensName: 'parry.tipx.eth',
-    wallet: '0x2643da3eb88CD85A92F62072c1D7F53Ad995932e',
-    description: 'GTM · marketing · product · mentor · ex-StackAI · Oxford',
-    avatar: '/parry.jpg',
-  },
   // real ENS profiles — resolved via mainnet, showcases universal tipping
   {
     id: 'brantly',

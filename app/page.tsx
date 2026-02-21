@@ -81,14 +81,44 @@ export default function Home() {
         </form>
       </div>
 
-      {/* divider */}
+      {/* how it works */}
+      <div className="flex items-center gap-4 mb-8">
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <span className="text-zinc-600 text-xs font-medium uppercase tracking-widest">how it works</span>
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+        <div className="text-center">
+          <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-aurora-emerald/10 flex items-center justify-center">
+            <span className="text-aurora-emerald text-lg font-bold">1</span>
+          </div>
+          <div className="text-sm font-medium text-white mb-1">pick a creator</div>
+          <p className="text-zinc-600 text-xs leading-relaxed">search any ENS name or browse the directory</p>
+        </div>
+        <div className="text-center">
+          <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-aurora-purple/10 flex items-center justify-center">
+            <span className="text-aurora-purple text-lg font-bold">2</span>
+          </div>
+          <div className="text-sm font-medium text-white mb-1">choose your chain</div>
+          <p className="text-zinc-600 text-xs leading-relaxed">tip directly on Arbitrum or bridge from another chain</p>
+        </div>
+        <div className="text-center">
+          <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-aurora-amber/10 flex items-center justify-center">
+            <span className="text-aurora-amber text-lg font-bold">3</span>
+          </div>
+          <div className="text-sm font-medium text-white mb-1">earn rewards</div>
+          <p className="text-zinc-600 text-xs leading-relaxed">every 3rd tip unlocks cashback for you and a bonus for the creator</p>
+        </div>
+      </div>
+
+      {/* creators */}
       <div className="flex items-center gap-4 mb-8">
         <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         <span className="text-zinc-600 text-xs font-medium uppercase tracking-widest">creators</span>
         <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
 
-      {/* creator grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
         {CREATORS.map((creator) => (
           <Link
@@ -131,37 +161,6 @@ export default function Home() {
             </div>
           </Link>
         ))}
-      </div>
-
-      {/* how it works */}
-      <div className="flex items-center gap-4 mb-8">
-        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-        <span className="text-zinc-600 text-xs font-medium uppercase tracking-widest">how it works</span>
-        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-        <div className="text-center">
-          <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-aurora-emerald/10 flex items-center justify-center">
-            <span className="text-aurora-emerald text-lg font-bold">1</span>
-          </div>
-          <div className="text-sm font-medium text-white mb-1">pick a creator</div>
-          <p className="text-zinc-600 text-xs leading-relaxed">search any ENS name or browse the directory</p>
-        </div>
-        <div className="text-center">
-          <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-aurora-purple/10 flex items-center justify-center">
-            <span className="text-aurora-purple text-lg font-bold">2</span>
-          </div>
-          <div className="text-sm font-medium text-white mb-1">choose your chain</div>
-          <p className="text-zinc-600 text-xs leading-relaxed">tip directly on Arbitrum or bridge from another chain</p>
-        </div>
-        <div className="text-center">
-          <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-aurora-amber/10 flex items-center justify-center">
-            <span className="text-aurora-amber text-lg font-bold">3</span>
-          </div>
-          <div className="text-sm font-medium text-white mb-1">earn rewards</div>
-          <p className="text-zinc-600 text-xs leading-relaxed">every 3rd tip unlocks cashback for you and a bonus for the creator</p>
-        </div>
       </div>
     </div>
   )
