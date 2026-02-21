@@ -108,6 +108,18 @@ export function TipForm({ creatorAddress, creatorName, onSuccess }: TipFormProps
 
       const amountUnits = parseUnits(amount, 6)
 
+      // check USDC balance
+      const balance = await arbPublicClient.readContract({
+        address: USDC_ADDRESS,
+        abi: ERC20_ABI,
+        functionName: 'balanceOf',
+        args: [address],
+      })
+      if (balance < amountUnits) {
+        const balUsd = Number(balance) / 1e6
+        throw new Error(`insufficient USDC balance (${balUsd.toFixed(2)} USDC). get testnet USDC from faucet.circle.com`)
+      }
+
       // check allowance, approve if needed
       const currentAllowance = await arbPublicClient.readContract({
         address: USDC_ADDRESS,
@@ -141,6 +153,12 @@ export function TipForm({ creatorAddress, creatorName, onSuccess }: TipFormProps
         gas: BigInt(300000),
       })
       setTxHash(contributeTx)
+
+      // wait for tx to be mined and check status
+      const receipt = await arbPublicClient.waitForTransactionReceipt({ hash: contributeTx })
+      if (receipt.status === 'reverted') {
+        throw new Error('transaction reverted on-chain — check USDC balance')
+      }
 
       // record in backend
       setStep('recording')
