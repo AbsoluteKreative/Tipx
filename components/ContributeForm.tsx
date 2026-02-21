@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useAccount, useWriteContract, usePublicClient } from 'wagmi'
+import { useAccount, useWriteContract, usePublicClient, useSwitchChain } from 'wagmi'
 import { parseUnits } from 'viem'
 import { VAULT_ABI, ERC20_ABI } from '@/lib/abi'
 import { VAULT_ADDRESS, USDC_ADDRESS, API_URL, arbitrumSepolia } from '@/lib/config'
@@ -15,9 +15,10 @@ interface ContributeFormProps {
 }
 
 export function ContributeForm({ creatorAddress, creatorName, onSuccess }: ContributeFormProps) {
-  const { address, isConnected } = useAccount()
+  const { address, isConnected, chainId } = useAccount()
+  const { switchChainAsync } = useSwitchChain()
   const [amount, setAmount] = useState('')
-  const [step, setStep] = useState<'idle' | 'approving' | 'contributing' | 'recording' | 'done' | 'error'>('idle')
+  const [step, setStep] = useState<'idle' | 'switching' | 'approving' | 'contributing' | 'recording' | 'done' | 'error'>('idle')
   const [error, setError] = useState('')
   const [payout, setPayout] = useState<any>(null)
   const [txHash, setTxHash] = useState<string>('')
@@ -30,6 +31,11 @@ export function ContributeForm({ creatorAddress, creatorName, onSuccess }: Contr
 
     setError('')
     try {
+      if (chainId !== arbitrumSepolia.id) {
+        setStep('switching')
+        await switchChainAsync({ chainId: arbitrumSepolia.id })
+      }
+
       const amountUnits = parseUnits(amount, 6)
 
       const currentAllowance = await publicClient.readContract({
@@ -141,7 +147,12 @@ export function ContributeForm({ creatorAddress, creatorName, onSuccess }: Contr
           disabled={!amount || parseFloat(amount) <= 0 || isActive}
           className="btn-emerald whitespace-nowrap"
         >
-          {step === 'approving' ? (
+          {step === 'switching' ? (
+            <span className="flex items-center gap-2">
+              <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              switching chain
+            </span>
+          ) : step === 'approving' ? (
             <span className="flex items-center gap-2">
               <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               approving

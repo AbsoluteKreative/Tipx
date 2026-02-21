@@ -77,7 +77,8 @@ export function BridgeTip({ creatorAddress, creatorName, onSuccess }: BridgeTipP
       })
 
       if (result.state !== 'success') {
-        throw new Error(`bridge failed: ${result.state}`)
+        const detail = (result as any)?.error?.message || (result as any)?.message || JSON.stringify(result)
+        throw new Error(`bridge ${result.state}: ${detail}`)
       }
 
       setStep('switching_arb')
@@ -137,7 +138,8 @@ export function BridgeTip({ creatorAddress, creatorName, onSuccess }: BridgeTipP
       onSuccess?.()
     } catch (err: any) {
       console.error('bridge & contribute failed:', err)
-      setError(err?.shortMessage || err?.message || 'bridge failed')
+      const msg = err?.shortMessage || err?.message || 'unknown error'
+      setError(msg.length > 300 ? msg.slice(0, 300) + '...' : msg)
       setStep('error')
     }
   }
