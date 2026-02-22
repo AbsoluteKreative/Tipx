@@ -148,11 +148,11 @@ funds payouts from its 5% cut, netting 4% — still competitive vs patreon's 5-1
 verified on Arbitrum Sepolia.
 
 ```solidity
-contribute(address creator, uint256 amount)              // ERC20 transferFrom, 95/5 split
-distributeLoyalty(address patron, address creator,        // operator-only, atomic loyalty payout
+contribute(address creator, uint256 amount)            // ERC20 transferFrom, 95/5 split
+distributeLoyalty(address patron, address creator,     // operator-only, atomic loyalty payout
                   uint256 cashback, uint256 bonus)
-withdraw(uint256 amount)                                 // withdraw accumulated fees
-vaultBalance() -> uint256                                // check protocol fee pool
+withdraw(uint256 amount)                               // withdraw accumulated fees
+vaultBalance() -> uint256                              // check protocol fee pool
 ```
 
 deployed at: [`0xC74D73971abE0B7EBc0Ef904aE8A5B925e87491B`](https://sepolia.arbiscan.io/address/0xC74D73971abE0B7EBc0Ef904aE8A5B925e87491B)
@@ -190,21 +190,21 @@ app/
   layout.tsx                  # root layout w/ wallet providers
 
 components/
-  WalletProvider.tsx           # wagmi + rainbowkit
-  TipForm.tsx                  # unified contribution flow (direct + cross-chain)
-  ENSProfile.tsx               # creator profile from ENS text records
-  ContributionFeed.tsx         # on-chain ContributionReceived events
-  Header.tsx                   # nav + connect button
+  WalletProvider.tsx          # wagmi + rainbowkit
+  TipForm.tsx                 # unified contribution flow (direct + cross-chain)
+  ENSProfile.tsx              # creator profile from ENS text records
+  ContributionFeed.tsx        # on-chain ContributionReceived events
+  Header.tsx                  # nav + connect button
 
 lib/
-  config.ts                    # chain defs, vault address, env vars
-  creators.ts                  # creator data (ENS names + wallets)
-  ens.ts                       # dual ENS resolution (Sepolia + mainnet)
-  abi.ts                       # vault + ERC20 ABIs
+  config.ts                   # chain defs, vault address, env vars
+  creators.ts                 # creator data (ENS names + wallets)
+  ens.ts                      # dual ENS resolution (Sepolia + mainnet)
+  abi.ts                      # vault + ERC20 ABIs
 
 server/
-  index.js                     # express API + loyalty payout logic
-  db.js                        # better-sqlite3 setup (WAL mode)
+  index.js                    # express API + loyalty payout logic
+  db.js                       # better-sqlite3 setup (WAL mode)
 ```
 
 ## running locally
@@ -223,14 +223,14 @@ cp .env.example .env
 ### environment variables
 
 ```
-PLATFORM_WALLET_PRIVATE_KEY         # EVM private key for loyalty payouts
-ARB_RPC_URL                         # Arbitrum Sepolia RPC (backend)
-NEXT_PUBLIC_ARB_RPC_URL             # Arbitrum Sepolia RPC (frontend)
-NEXT_PUBLIC_VAULT_ADDRESS           # deployed ContributionVault
-NEXT_PUBLIC_USDC_ADDRESS            # USDC on Arbitrum Sepolia
+PLATFORM_WALLET_PRIVATE_KEY           # EVM private key for loyalty payouts
+ARB_RPC_URL                           # Arbitrum Sepolia RPC (backend)
+NEXT_PUBLIC_ARB_RPC_URL               # Arbitrum Sepolia RPC (frontend)
+NEXT_PUBLIC_VAULT_ADDRESS             # deployed ContributionVault
+NEXT_PUBLIC_USDC_ADDRESS              # USDC on Arbitrum Sepolia
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID  # from cloud.walletconnect.com
-NEXT_PUBLIC_API_URL                 # backend URL (default http://localhost:7301)
-LOYALTY_PAYOUT_RATE                 # default 0.005 (0.5%)
+NEXT_PUBLIC_API_URL                   # backend URL (default http://localhost:7301)
+LOYALTY_PAYOUT_RATE                   # default 0.005 (0.5%)
 ```
 
 testnet tokens:
