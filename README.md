@@ -96,7 +96,8 @@ loyalty payouts are also on-chain — `distributeLoyalty()` settles to both patr
 patron has USDC on any CCTP-supported chain (Arc, Base, Ethereum, Polygon, Avalanche,
 Solana, and others — 500+ routes across 17 chains) -> BridgeKit handles
 the burn-attest-mint cycle -> USDC arrives on Arbitrum -> approve + contribute.
-real USDC, not wrapped — CCTP v2 burns and mints natively.
+real USDC, not wrapped — CCTP v2 burns and mints natively. attestation completes in just
+**seconds** (down from ~10-15 min in v1), making cross-chain tips practical for casual use.
 
 ## ENS integration
 
@@ -173,7 +174,7 @@ deployed at: [`0xC74D73971abE0B7EBc0Ef904aE8A5B925e87491B`](https://sepolia.arbi
 - **USDC-only** — people think in dollars. stable for creators, stable for platform revenue. no volatility exposure.
 - **chain-agnostic backend** — normalises contributions from any chain into a unified schema. tracks patron→creator relationships, detects loyalty thresholds, triggers on-chain payouts. adding a new source chain = zero backend changes.
 - **ENS as identity layer** — creators are people, not hex addresses. text records double as a decentralised profile system.
-- **BridgeKit for cross-chain** — CCTP v2 burns-and-mints real USDC (not wrapped). native bridging, no liquidity pools.
+- **BridgeKit for cross-chain** — CCTP v2 burns-and-mints real USDC (not wrapped). native bridging, no liquidity pools, no slippage. the v2 upgrade is a night-and-day improvement over v1: attestation times dropped from ~10-15 minutes to seconds, which makes cross-chain tipping feel nearly as responsive as a direct on-chain transfer. BridgeKit abstracts the burn→attest→mint cycle into a single SDK call, handling chain-specific token addresses, attestation polling, and destination minting under the hood.
 - **Arbitrum as settlement chain** — sub-second block times, sub-cent tx fees, native CCTP support for cross-chain USDC, and universal wallet compatibility (every major wallet supports Arbitrum out of the box). all contributions settle here regardless of origin chain, giving creators a single reliable payout destination.
 
 ## project structure
