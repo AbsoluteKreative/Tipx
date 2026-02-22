@@ -8,7 +8,7 @@ and automatic loyalty payouts.
 
 built for [Arbitrum NYC](https://arbitrum-nyc.hackquest.io).
 
-> **[demo video](#)** (link TBD)
+> **live demo**: https://tipx.fly.dev (Testnet)
 
 ---
 
