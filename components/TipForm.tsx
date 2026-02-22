@@ -287,7 +287,7 @@ export function TipForm({ creatorAddress, creatorName, onSuccess }: TipFormProps
       {/* bridge info hint */}
       {!isDirect && step === 'idle' && (
         <p className="text-zinc-600 text-[11px] leading-relaxed">
-          USDC will bridge from {activeRoute.label} to Arbitrum via CCTP, then tip. attestation takes ~10-15 min.
+          USDC will bridge from {activeRoute.label} to Arbitrum via CCTP, then tip. usually takes under a minute.
         </p>
       )}
 
